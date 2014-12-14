@@ -49,9 +49,6 @@ $(document).ready(function(){
 					centerX1 = offset1.left + $("#" + event.target.id).innerWidth()/2 + 20.5; //22.5 is the margin of the button class
 					centerY1 = offset1.top + $("#" + event.target.id).innerHeight()/2 + 20.5;
 
-					//console.log("centerX1 " + centerX1);
-					//console.log("centerY1 " + centerY1);
-
 					if (event && event.preventDefault){
 			               event.preventDefault();
 		            }
@@ -60,8 +57,6 @@ $(document).ready(function(){
 
 					password = event.target.id.split("button").join("");
 					startpointnumber = event.target.id.split("button").join("");
-
-					//console.log("startpointnumber " + startpointnumber);
 
 					addline(startpointnumber, centerX1, centerY1); //initiating a moving line
 				}
@@ -84,45 +79,51 @@ $(document).ready(function(){
 			        //setting varying width and slope to line
 			        $("#line" + startpointnumber).css({"width": + width +"px", "height": "4px", "transform": "rotate(" + slope + "deg)", "-webkit-transform": "rotate(" + slope + "deg)", "-moz-transform": "rotate(" + slope + "deg)"});
 
-			        //if button is found on the path
-    	    		$(".button").bind("mouseover", function(e) {
+			        for (var i = 1; i < 10; i++) {
 
-    	    			endpointnumber = e.target.id.split("button").join("");
+				        //if button is found on the path
+	    	    		$("#button" + i).bind("mouseover", function(e) {
 
-        				if (startpointnumber != endpointnumber) {
-							if (e && e.preventDefault){
-				               e.preventDefault();
-				            }
+	    	    			endpointnumber = e.target.id.split("button").join("");
 
-				            if (e.target.className == "button") {
-				            	$("#" + e.target.id).removeClass("button").addClass("activebutton");
-							} else {
-								$("#" + e.target.id).removeClass("activebutton").addClass("duplicatebutton");
-							}
+	        				if (startpointnumber != endpointnumber) {
+								if (e && e.preventDefault){
+					               e.preventDefault();
+					            }
 
-				            password += e.target.id.split("button").join("");
-				            // endpointnumber = e.target.id.split("button").join("");
+					            if (e.target.className == "button") {
+					            	$("#" + e.target.id).removeClass("button").addClass("activebutton");
+								} else {
+									$("#" + e.target.id).removeClass("activebutton").addClass("duplicatebutton");
+								}
 
-				            $("#line" + startpointnumber).attr("id", "line" + startpointnumber + endpointnumber);
+					            password += e.target.id.split("button").join("");
 
-				            var offset2 = $("#" + e.target.id).position();
-				            
-				            var centerX2 = offset2.left + $("#" + e.target.id).outerWidth()/2 + 20.5;  //20.5 is the margin of activebutton class
-				            var centerY2 = offset2.top + $("#" + e.target.id).outerHeight()/2 + 20.5;
+					            $("#line" + startpointnumber).attr("id", "line" + startpointnumber + endpointnumber);
 
-				            var linewidth = Math.sqrt(Math.pow(centerX2 - centerX1, 2) + Math.pow(centerY2 - centerY1, 2));
-				            var lineslope = Math.atan2(centerY2 - centerY1, centerX2 - centerX1)*180/3.14;
+					            var offset2 = $("#" + e.target.id).position();
+					            
+					            var centerX2 = offset2.left + $("#" + e.target.id).outerWidth()/2 + 20.5;  //20.5 is the margin of activebutton class
+					            var centerY2 = offset2.top + $("#" + e.target.id).outerHeight()/2 + 20.5;
 
-				            $("#line" + startpointnumber + endpointnumber).css({"width": + linewidth +"px", "transform": "rotate(" + lineslope + "deg)", "-webkit-transform": "rotate(" + lineslope + "deg)", "-moz-transform": "rotate(" + lineslope + "deg)"});
+					            var linewidth = Math.sqrt(Math.pow(centerX2 - centerX1, 2) + Math.pow(centerY2 - centerY1, 2));
+					            var lineslope = Math.atan2(centerY2 - centerY1, centerX2 - centerX1)*180/3.14;
 
-				            startpointnumber = endpointnumber;
-				            centerX1 = centerX2;
-				            centerY1 = centerY2;
+					            $("#line" + startpointnumber + endpointnumber).css({"width": + linewidth +"px", "transform": "rotate(" + lineslope + "deg)", "-webkit-transform": "rotate(" + lineslope + "deg)", "-moz-transform": "rotate(" + lineslope + "deg)"});
 
-				            addline(startpointnumber, centerX1, centerY1);
-        				}
+					            if (e.target.className == "duplicatebutton") {
+					            	raiseerror("repeatedEntry");
+					            }
 
-    	    		});
+					            startpointnumber = endpointnumber;
+					            centerX1 = centerX2;
+					            centerY1 = centerY2;
+
+					            addline(startpointnumber, centerX1, centerY1);
+	        				}
+
+	    	    		});
+			        }
 			    }
 
 				$("#patterncontainer").on("mouseup", function (event){
@@ -161,8 +162,6 @@ $(document).ready(function(){
 	    	raiseerror("lengthTooSmall");
 	    }
 
-	    checkduplicatedigits(password);
-
 	    if (errorraised == false && passwordset == false) {
 			localStorage.setItem("password", password);
 			successmessage("patternStored");
@@ -181,20 +180,6 @@ $(document).ready(function(){
 
 	function getlength(number) {
 	    return number.toString().length;
-	};
-
-	function checkduplicatedigits(number) {
-		var digits = getlength(number);
-		numberstring = number.toString();
-		var numberarray = numberstring.split("");
-		var i; var j;
-		for (i = 0; i < digits-1; i++) {
-			for (j = i+1; j < digits; j++) {
-				if(numberarray[i] == numberarray[j]) {
-					raiseerror("repeatedEntry");
-				}
-			}
-		}
 	};
 
 	function successmessage(successcode) {
