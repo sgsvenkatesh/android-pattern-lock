@@ -107,8 +107,8 @@ $(document).ready(function(){
 
 				            var offset2 = $("#" + e.target.id).position();
 				            
-				            var centerX2 = offset2.left + $("#" + e.target.id).innerWidth()/2 + 20.5;  //20.5 is the margin of activebutton class
-				            var centerY2 = offset2.top + $("#" + e.target.id).innerHeight()/2 + 20.5;
+				            var centerX2 = offset2.left + $("#" + e.target.id).outerWidth()/2 + 20.5;  //20.5 is the margin of activebutton class
+				            var centerY2 = offset2.top + $("#" + e.target.id).outerHeight()/2 + 20.5;
 
 				            var linewidth = Math.sqrt(Math.pow(centerX2 - centerX1, 2) + Math.pow(centerY2 - centerY1, 2));
 				            var lineslope = Math.atan2(centerY2 - centerY1, centerX2 - centerX1)*180/3.14;
